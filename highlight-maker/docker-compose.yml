@@ -1,0 +1,38 @@
+services:
+  highlight-maker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: qsc-highlight-maker:latest
+    ports:
+      - "8080:8080"
+      - "1455:1455"
+    environment:
+      OLLAMA_HOST: http://ollama:11434
+      HIGHLIGHT_TEMPLATE: /work/highlight-slides/FY26_Highlight_Template.pptx
+      HIGHLIGHT_QSC_LOGO: /work/highlight-slides/assets/qsc-logo-white.png
+    volumes:
+      - ..:/work/highlight-slides
+      - ./work:/work/projects
+      - highlight-home:/home/coder
+    working_dir: /workspaces/highlight-maker
+    command: >
+      sh -lc
+      "socat TCP-LISTEN:1455,fork,reuseaddr,bind=0.0.0.0 TCP:127.0.0.1:1455 &
+      exec code-server
+      --bind-addr 0.0.0.0:8080
+      --auth none
+      /workspaces/highlight-maker"
+
+  ollama:
+    image: ollama/ollama:latest
+    profiles:
+      - local-llm
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama:/root/.ollama
+
+volumes:
+  highlight-home:
+  ollama:

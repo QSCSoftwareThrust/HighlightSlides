@@ -1,0 +1,243 @@
+{
+  "source": {
+    "name": "ORNL, partners secure $125M renewal for Quantum Science Center",
+    "url": "https://www.ornl.gov/news/ornl-partners-secure-125m-renewal-quantum-science-center",
+    "note": "ORNL article updated March 5, 2026 lists current QSC partner organizations for the renewal period."
+  },
+  "fixed_logo": {
+    "name": "Quantum Science Center",
+    "slug": "qsc",
+    "expected_path": "../qsc-logo.png",
+    "policy": "Inserted automatically by the deck generator; do not list QSC in per-paper Institution Logos."
+  },
+  "logo_policy": "Use QSC automatically plus logos only for institution(s) the paper supports as QSC-funded or QSC-supported. Prefer white or knockout logos because the template places logos on the blue bottom band. Do not include every author affiliation.",
+  "related_non_qsc_or_historical": [
+    {
+      "name": "Fermi National Accelerator Laboratory",
+      "slug": "fermilab",
+      "type": "national_lab",
+      "expected_path": "fermilab.png",
+      "official_site": "https://www.fnal.gov/",
+      "notes": "Historical 2020 QSC partner; include only when supported by the paper."
+    },
+    {
+      "name": "Harvard University",
+      "slug": "harvard",
+      "type": "university",
+      "expected_path": "harvard.png",
+      "official_site": "https://www.harvard.edu/",
+      "notes": "Historical 2020 QSC partner; include only when supported by the paper."
+    },
+    {
+      "name": "Princeton University",
+      "slug": "princeton",
+      "type": "university",
+      "expected_path": "princeton.png",
+      "official_site": "https://www.princeton.edu/",
+      "notes": "Historical 2020 QSC partner; include only when supported by the paper."
+    },
+    {
+      "name": "University of Maryland",
+      "slug": "umd",
+      "type": "university",
+      "expected_path": "umd.png",
+      "official_site": "https://www.umd.edu/",
+      "notes": "Historical 2020 QSC partner; include only when supported by the paper."
+    },
+    {
+      "name": "University of Washington",
+      "slug": "uw",
+      "type": "university",
+      "expected_path": "uw.png",
+      "official_site": "https://www.washington.edu/",
+      "notes": "Historical 2020 QSC partner; include only when supported by the paper."
+    },
+    {
+      "name": "Microsoft",
+      "slug": "microsoft",
+      "type": "industry",
+      "expected_path": "microsoft.png",
+      "official_site": "https://www.microsoft.com/",
+      "notes": "Historical 2020 QSC partner; include only when supported by the paper."
+    }
+  ],
+  "ready_logos": [
+    {
+      "name": "Oak Ridge National Laboratory",
+      "slug": "ornl",
+      "type": "national_lab",
+      "expected_path": "ornl.png",
+      "official_site": "https://www.ornl.gov/",
+      "notes": "QSC headquarters and lead institution. Current file is a green official ORNL logo; replace with a white version if contrast is poor on the blue footer.",
+      "readiness": "ready",
+      "background_fit": "blue_footer_ok"
+    },
+    {
+      "name": "Los Alamos National Laboratory",
+      "slug": "lanl",
+      "type": "national_lab",
+      "expected_path": "lanl.png",
+      "official_site": "https://www.lanl.gov/",
+      "readiness": "ready",
+      "background_fit": "blue_footer_ok"
+    },
+    {
+      "name": "Pacific Northwest National Laboratory",
+      "slug": "pnnl",
+      "type": "national_lab",
+      "expected_path": "pnnl.jpg",
+      "official_site": "https://www.pnnl.gov/",
+      "readiness": "ready",
+      "background_fit": "blue_footer_review",
+      "notes": "Fallback JPEG logo; replace with an official transparent or white version if available."
+    },
+    {
+      "name": "Sandia National Laboratories",
+      "slug": "sandia",
+      "type": "national_lab",
+      "expected_path": "sandia.png",
+      "official_site": "https://www.sandia.gov/",
+      "notes": "White official Sandia logo works on the template blue footer. Not listed as a current QSC renewal partner in the ORNL 2026-updated partner list; include only when a paper supports Sandia as QSC-funded or QSC-supported.",
+      "readiness": "ready_when_supported_by_paper",
+      "background_fit": "blue_footer_preferred"
+    }
+  ],
+  "possible_qsc_partners_not_yet_downloaded": [
+    {
+      "name": "California Institute of Technology",
+      "slug": "caltech",
+      "type": "university",
+      "expected_path": "caltech.png",
+      "official_site": "https://www.caltech.edu/",
+      "readiness": "not_downloaded"
+    },
+    {
+      "name": "Cornell University",
+      "slug": "cornell",
+      "type": "university",
+      "expected_path": "cornell.png",
+      "official_site": "https://www.cornell.edu/",
+      "readiness": "not_downloaded"
+    },
+    {
+      "name": "North Carolina State University",
+      "slug": "nc-state",
+      "type": "university",
+      "expected_path": "nc-state.png",
+      "official_site": "https://www.ncsu.edu/",
+      "readiness": "not_downloaded"
+    },
+    {
+      "name": "Purdue University",
+      "slug": "purdue",
+      "type": "university",
+      "expected_path": "purdue.png",
+      "official_site": "https://www.purdue.edu/",
+      "readiness": "not_downloaded"
+    },
+    {
+      "name": "University of California, Berkeley",
+      "slug": "uc-berkeley",
+      "type": "university",
+      "expected_path": "uc-berkeley.png",
+      "official_site": "https://www.berkeley.edu/",
+      "readiness": "not_downloaded"
+    },
+    {
+      "name": "University of California, Davis",
+      "slug": "uc-davis",
+      "type": "university",
+      "expected_path": "uc-davis.png",
+      "official_site": "https://www.ucdavis.edu/",
+      "readiness": "not_downloaded"
+    },
+    {
+      "name": "University of California, San Diego",
+      "slug": "uc-san-diego",
+      "type": "university",
+      "expected_path": "uc-san-diego.png",
+      "official_site": "https://ucsd.edu/",
+      "readiness": "not_downloaded"
+    },
+    {
+      "name": "University of Tennessee, Knoxville",
+      "slug": "ut-knoxville",
+      "type": "university",
+      "expected_path": "ut-knoxville.png",
+      "official_site": "https://www.utk.edu/",
+      "readiness": "not_downloaded"
+    },
+    {
+      "name": "Atom Computing",
+      "slug": "atom-computing",
+      "type": "industry",
+      "expected_path": "atom-computing.png",
+      "official_site": "https://atom-computing.com/",
+      "readiness": "not_downloaded"
+    },
+    {
+      "name": "IBM",
+      "slug": "ibm",
+      "type": "industry",
+      "expected_path": "ibm.png",
+      "official_site": "https://www.ibm.com/",
+      "readiness": "not_downloaded"
+    },
+    {
+      "name": "Infleqtion",
+      "slug": "infleqtion",
+      "type": "industry",
+      "expected_path": "infleqtion.png",
+      "official_site": "https://www.infleqtion.com/",
+      "readiness": "not_downloaded"
+    },
+    {
+      "name": "IonQ",
+      "slug": "ionq",
+      "type": "industry",
+      "expected_path": "ionq.png",
+      "official_site": "https://ionq.com/",
+      "readiness": "not_downloaded"
+    },
+    {
+      "name": "IQM",
+      "slug": "iqm",
+      "type": "industry",
+      "expected_path": "iqm.png",
+      "official_site": "https://www.meetiqm.com/",
+      "readiness": "not_downloaded"
+    },
+    {
+      "name": "Quantinuum",
+      "slug": "quantinuum",
+      "type": "industry",
+      "expected_path": "quantinuum.png",
+      "official_site": "https://www.quantinuum.com/",
+      "readiness": "not_downloaded"
+    },
+    {
+      "name": "QuEra",
+      "slug": "quera",
+      "type": "industry",
+      "expected_path": "quera.png",
+      "official_site": "https://www.quera.com/",
+      "readiness": "not_downloaded"
+    },
+    {
+      "name": "Riverlane Research",
+      "slug": "riverlane",
+      "type": "industry",
+      "expected_path": "riverlane.png",
+      "official_site": "https://www.riverlane.com/",
+      "readiness": "not_downloaded"
+    },
+    {
+      "name": "Unitary Foundation",
+      "slug": "unitary-foundation",
+      "type": "nonprofit",
+      "expected_path": "unitary-foundation.png",
+      "official_site": "https://unitary.foundation/",
+      "readiness": "not_downloaded"
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "name": "DOE Highlight Maker",
+  "build": {
+    "dockerfile": "../Dockerfile",
+    "context": ".."
+  },
+  "workspaceFolder": "/workspaces/highlight-maker",
+  "forwardPorts": [8080],
+  "postCreateCommand": "pip install -e .",
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "python.defaultInterpreterPath": "/usr/local/bin/python"
+      },
+      "extensions": [
+        "ms-python.python",
+        "ms-python.vscode-pylance"
+      ]
+    }
+  },
+  "remoteUser": "coder",
+  "mounts": [
+    "source=${localWorkspaceFolder}/..,target=/work/highlight-slides,type=bind,consistency=cached"
+  ]
+}

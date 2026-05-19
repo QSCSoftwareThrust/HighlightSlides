@@ -1,0 +1,63 @@
+{
+  "qsc-logo.png": {
+    "name": "Quantum Science Center",
+    "source_url": "https://www.qscience.org/wp-content/uploads/2025/07/QSCLogo_Color_H_SM.png",
+    "source_type": "official_qsc_site",
+    "local_path": "../qsc-logo.png"
+  },
+  "qsc-logo-white.png": {
+    "name": "Quantum Science Center",
+    "source_url": "derived from https://www.qscience.org/wp-content/uploads/2025/07/QSCLogo_Color_H_SM.png",
+    "source_type": "derived_white_knockout_for_blue_footer",
+    "local_path": "../qsc-logo-white.png"
+  },
+  "qsc.png": {
+    "name": "Quantum Science Center",
+    "source_url": "https://www.qscience.org/wp-content/uploads/2025/07/QSCLogo_Color_H_SM.png",
+    "source_type": "official_qsc_site",
+    "local_path": "qsc.png"
+  },
+  "qsc-white.png": {
+    "name": "Quantum Science Center",
+    "source_url": "derived from https://www.qscience.org/wp-content/uploads/2025/07/QSCLogo_Color_H_SM.png",
+    "source_type": "derived_white_knockout_for_blue_footer",
+    "local_path": "qsc-white.png"
+  },
+  "ornl.png": {
+    "name": "Oak Ridge National Laboratory",
+    "source_url": "https://www.ornl.gov/themes/custom/ornl/images/ornl-logo-green.svg",
+    "source_type": "official_ornl_site_converted_from_svg",
+    "local_path": "ornl.png"
+  },
+  "ornl-white.png": {
+    "name": "Oak Ridge National Laboratory",
+    "source_url": "derived from https://www.ornl.gov/themes/custom/ornl/images/ornl-logo-green.svg",
+    "source_type": "derived_white_knockout_for_blue_footer",
+    "local_path": "ornl-white.png"
+  },
+  "lanl.png": {
+    "name": "Los Alamos National Laboratory",
+    "source_url": "https://commons.wikimedia.org/wiki/Special:Redirect/file/LANL_Logo.png",
+    "source_type": "wikimedia_commons_png_fallback",
+    "local_path": "lanl.png"
+  },
+  "lanl-white.png": {
+    "name": "Los Alamos National Laboratory",
+    "source_url": "derived from https://commons.wikimedia.org/wiki/Special:Redirect/file/LANL_Logo.png",
+    "source_type": "derived_white_knockout_for_blue_footer",
+    "local_path": "lanl-white.png"
+  },
+  "pnnl.jpg": {
+    "name": "Pacific Northwest National Laboratory",
+    "source_url": "https://upload.wikimedia.org/wikipedia/commons/e/eb/PNNL_CENTER_FullColorSMALL.jpg",
+    "source_type": "wikimedia_commons_jpg_fallback",
+    "local_path": "pnnl.jpg"
+  },
+  "sandia.png": {
+    "name": "Sandia National Laboratories",
+    "source_url": "https://www.sandia.gov/app/themes/thunderberg/assets/logos/sandia/stacked/white/sandia-logo-stacked-white-240x124.png",
+    "source_type": "official_sandia_site",
+    "local_path": "sandia.png",
+    "note": "White stacked logo; use only on dark or colored background unless replaced with a color asset."
+  }
+}

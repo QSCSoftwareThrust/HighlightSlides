@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "highlight-maker"
+version = "0.1.0"
+description = "Container-friendly workflow for DOE/NQISRC/QSC paper highlight slide inputs."
+requires-python = ">=3.10"
+dependencies = [
+  "markitdown[pdf]",
+  "pymupdf",
+  "Pillow",
+  "python-pptx",
+  "requests",
+  "typer[all]",
+  "pydantic",
+  "rich"
+]
+
+[project.scripts]
+highlight = "highlight_tool.cli:entrypoint"
+
+[tool.setuptools.packages.find]
+where = ["src"]
