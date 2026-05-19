@@ -2,6 +2,14 @@
 
 Use this workflow on lab machines where containers are not practical.
 
+Supported host platforms:
+
+- macOS with Homebrew dependencies.
+- Linux with Python, Git, and Poppler installed through the system package
+  manager.
+- Windows through WSL/Ubuntu. Native PowerShell is not the recommended path for
+  this version.
+
 ```bash
 cd HighlightSlides
 ./install.sh
@@ -32,6 +40,17 @@ If Codex or Claude are not installed and local npm installs are allowed:
 
 ```bash
 ./install.sh --with-llm-clis
+```
+
+Platform prerequisites:
+
+```bash
+# macOS
+brew install python git poppler
+
+# Ubuntu/Debian Linux or Windows WSL/Ubuntu
+sudo apt update
+sudo apt install -y python3 python3-venv python3-pip git poppler-utils
 ```
 
 The workflow writes per-paper files under `work/`, for example:
