@@ -7,7 +7,9 @@ from pathlib import Path
 from PIL import Image
 from pptx import Presentation
 from pptx.dml.color import RGBColor
+from pptx.enum.text import MSO_AUTO_SIZE
 from pptx.enum.text import PP_ALIGN
+from pptx.oxml.xmlchemy import OxmlElement
 from pptx.util import Pt
 
 
@@ -28,14 +30,14 @@ FIELD_NAMES = [
     "Funding Institution Contributions",
 ]
 
-SLIDE1_ACHIEVEMENT = (5484242, 846572, 6536773, 1385422)
-SLIDE1_IMPACT = (5484242, 2136544, 6536773, 1385422)
-SLIDE1_DETAILS = (5428304, 3279528, 6536773, 1385422)
-SLIDE1_FIGURE = (548770, 1107088, 4935472, 2850432)
-SLIDE1_CAPTION = (633893, 3957520, 4709288, 1077218)
-SLIDE1_REFERENCE = (408791, 5065329, 5075451, 646331)
-SLIDE2_ROLE = (577016, 1114915, 10516969, 1077218)
-SLIDE2_CONTRIBUTIONS = (576498, 2219044, 11149337, 1600000)
+SLIDE1_ACHIEVEMENT = (5484242, 970000, 6536773, 1130000)
+SLIDE1_IMPACT = (5484242, 2190000, 6536773, 1220000)
+SLIDE1_DETAILS = (5484242, 3510000, 6536773, 2350000)
+SLIDE1_FIGURE = (548770, 1180000, 4935472, 2870000)
+SLIDE1_CAPTION = (633893, 4210000, 4709288, 780000)
+SLIDE1_REFERENCE = (408791, 5130000, 5075451, 800000)
+SLIDE2_ROLE = (577016, 1260000, 10516969, 980000)
+SLIDE2_CONTRIBUTIONS = (576498, 2640000, 11149337, 3150000)
 
 
 def parse_key_information(path: Path) -> dict[str, str]:
@@ -54,39 +56,65 @@ def parse_key_information(path: Path) -> dict[str, str]:
     return {name: fields.get(name, "").strip() for name in FIELD_NAMES}
 
 
-def _set_text(shape, text: str, *, font_size: int = 15, bold_first_line: bool = True) -> None:
+def _set_paragraph_style(paragraph, *, font_size: int, bold: bool = False) -> None:
+    ppr = paragraph._p.get_or_add_pPr()
+    for child in list(ppr):
+        if child.tag.endswith(
+            ("}buNone", "}buChar", "}buAutoNum", "}buBlip", "}buFont", "}buSzPct", "}buSzPts")
+        ):
+            ppr.remove(child)
+    ppr.insert(0, OxmlElement("a:buNone"))
+    ppr.set("marL", "0")
+    ppr.set("indent", "0")
+    paragraph.font.size = Pt(font_size)
+    paragraph.font.color.rgb = RGBColor(0, 0, 0)
+    paragraph.font.bold = bold
+    paragraph.space_after = Pt(2)
+    paragraph.line_spacing = 0.9
+
+
+def _set_text(
+    shape,
+    text: str,
+    *,
+    font_size: int = 15,
+    heading_size: int | None = None,
+    bold_first_line: bool = True,
+    compact: bool = True,
+) -> None:
     shape.text_frame.clear()
+    shape.text_frame.margin_left = Pt(4)
+    shape.text_frame.margin_right = Pt(4)
+    shape.text_frame.margin_top = Pt(2)
+    shape.text_frame.margin_bottom = Pt(2)
+    shape.text_frame.word_wrap = True
+    shape.text_frame.auto_size = MSO_AUTO_SIZE.TEXT_TO_FIT_SHAPE
+
     lines = text.splitlines() or [""]
+    heading_size = heading_size or font_size
 
     first = shape.text_frame.paragraphs[0]
     first.text = lines[0]
-    first.font.size = Pt(font_size)
-    first.font.color.rgb = RGBColor(0, 0, 0)
-    first.font.bold = bold_first_line
+    _set_paragraph_style(first, font_size=heading_size, bold=bold_first_line)
 
     for line in lines[1:]:
         paragraph = shape.text_frame.add_paragraph()
         clean = line.strip()
         is_bullet = clean.startswith("- ")
-        paragraph.text = clean[2:] if is_bullet else clean
-        paragraph.font.size = Pt(font_size)
-        paragraph.font.color.rgb = RGBColor(0, 0, 0)
+        paragraph.text = f"• {clean[2:]}" if is_bullet else clean
         paragraph.level = 0
-        if is_bullet:
-            paragraph._p.get_or_add_pPr().set("marL", "228600")
-            paragraph._p.get_or_add_pPr().set("indent", "-114300")
-
-    shape.text_frame.word_wrap = True
-    for paragraph in shape.text_frame.paragraphs:
-        paragraph.font.size = Pt(font_size)
-        paragraph.font.color.rgb = RGBColor(0, 0, 0)
+        _set_paragraph_style(paragraph, font_size=font_size, bold=False)
+        if compact:
+            paragraph.space_after = Pt(1)
 
 
-def _set_title(shape, title: str) -> None:
+def _set_title(shape, title: str, *, font_size: int = 24) -> None:
     shape.text_frame.clear()
+    shape.text_frame.word_wrap = True
+    shape.text_frame.auto_size = MSO_AUTO_SIZE.TEXT_TO_FIT_SHAPE
     paragraph = shape.text_frame.paragraphs[0]
     paragraph.text = title or "Untitled Highlight"
-    paragraph.font.size = Pt(28)
+    paragraph.font.size = Pt(font_size)
     paragraph.font.bold = True
     paragraph.font.color.rgb = RGBColor(0, 0, 0)
     paragraph.alignment = PP_ALIGN.LEFT
@@ -392,10 +420,12 @@ def _slide2_role_text(fields: dict[str, str]) -> str:
     funding_role = fields["NQISRC Funding Role"] or "Unknown"
     return "\n".join(
         [
-            "NQISRC Intellectual Role:",
-            intellectual_role,
+            "NQISRC Roles",
+            f"Intellectual role: {intellectual_role}",
+            f"Funding role: {funding_role}",
             "",
-            f"NQISRC Funding Role: {funding_role}",
+            _role_explanation(intellectual_role),
+            _funding_explanation(funding_role),
         ]
     )
 
@@ -424,7 +454,7 @@ def build_highlight_deck(
     _delete_slides_after(prs, 2)
 
     slide1 = prs.slides[0]
-    _set_title(slide1.shapes[0], fields["Highlight Title"])
+    _set_title(slide1.shapes[0], fields["Highlight Title"], font_size=24)
     for shape, geometry in [
         (slide1.shapes[1], SLIDE1_ACHIEVEMENT),
         (slide1.shapes[2], SLIDE1_IMPACT),
@@ -434,11 +464,36 @@ def build_highlight_deck(
     ]:
         shape.left, shape.top, shape.width, shape.height = geometry
 
-    _set_text(slide1.shapes[1], _text_with_heading("Scientific Achievement", fields["Scientific Achievement"]), font_size=16)
-    _set_text(slide1.shapes[2], _text_with_heading("Significance and Impact", fields["Significance and Impact"]), font_size=16)
-    _set_text(slide1.shapes[3], _bulleted_text("Research Details", fields["Research Details"]), font_size=16)
-    _set_text(slide1.shapes[4], fields["Figure Caption"] or "Short figure caption", font_size=16, bold_first_line=False)
-    _set_text(slide1.shapes[5], _reference_text(project_dir, fields["Citation"], fields["DOI"]), font_size=12)
+    _set_text(
+        slide1.shapes[1],
+        _text_with_heading("Scientific Achievement", fields["Scientific Achievement"]),
+        font_size=12,
+        heading_size=14,
+    )
+    _set_text(
+        slide1.shapes[2],
+        _text_with_heading("Significance and Impact", fields["Significance and Impact"]),
+        font_size=12,
+        heading_size=14,
+    )
+    _set_text(
+        slide1.shapes[3],
+        _bulleted_text("Research Details", fields["Research Details"]),
+        font_size=11,
+        heading_size=14,
+    )
+    _set_text(
+        slide1.shapes[4],
+        fields["Figure Caption"] or "Short figure caption",
+        font_size=11,
+        bold_first_line=False,
+    )
+    _set_text(
+        slide1.shapes[5],
+        _reference_text(project_dir, fields["Citation"], fields["DOI"]),
+        font_size=9,
+        heading_size=10,
+    )
 
     image_box = slide1.shapes[7]
     image_path = _first_existing_figure(project_dir, fields["Recommended Figure"])
@@ -458,7 +513,7 @@ def build_highlight_deck(
     _add_qsc_and_partner_logos(slide1, qsc_logo, partner_logos, left, top, width, height)
 
     slide2 = prs.slides[1]
-    _set_title(slide2.shapes[0], f"{fields['Highlight Title'] or 'Highlight'}: NQISRC Roles")
+    _set_title(slide2.shapes[0], f"{fields['Highlight Title'] or 'Highlight'}: NQISRC Roles", font_size=24)
     content_box = slide2.shapes[1]
     _delete_shape(content_box)
 
@@ -466,13 +521,13 @@ def build_highlight_deck(
         slide2,
         *SLIDE2_ROLE,
         _slide2_role_text(fields),
-        font_size=24,
+        font_size=13,
     )
     _add_text_box(
         slide2,
         *SLIDE2_CONTRIBUTIONS,
         _slide2_contribution_text(fields),
-        font_size=20,
+        font_size=13,
     )
 
     output = output_path or project_dir / "output" / "highlight_slides.pptx"
