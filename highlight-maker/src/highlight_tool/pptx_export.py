@@ -34,7 +34,6 @@ SLIDE1_DETAILS = (5428304, 3279528, 6536773, 1385422)
 SLIDE1_FIGURE = (548770, 1107088, 4935472, 2850432)
 SLIDE1_CAPTION = (633893, 3957520, 4709288, 1077218)
 SLIDE1_REFERENCE = (408791, 5065329, 5075451, 646331)
-SLIDE1_LOGOS = (6718327, 6368645, 5000000, 412033)
 SLIDE2_ROLE = (577016, 1114915, 10516969, 1077218)
 SLIDE2_CONTRIBUTIONS = (576498, 2219044, 11149337, 1600000)
 
@@ -124,7 +123,7 @@ def _resolve_project_image(project_dir: Path, candidate: str) -> Path | None:
     path = Path(candidate.strip())
     if path.is_absolute() and path.exists():
         return path
-    preferred = _white_variant_candidates(path)
+    candidates = [path, *_white_variant_candidates(path)]
     roots = [
         project_dir,
         project_dir / "logos",
@@ -137,13 +136,10 @@ def _resolve_project_image(project_dir: Path, candidate: str) -> Path | None:
         Path(__file__).resolve().parents[4] / "assets" / "logos",
     ]
     for root in roots:
-        for preferred_path in preferred:
-            resolved_preferred = root / preferred_path
-            if resolved_preferred.exists():
-                return resolved_preferred
-        resolved = root / path
-        if resolved.exists():
-            return resolved
+        for candidate_path in candidates:
+            resolved = root / candidate_path
+            if resolved.exists():
+                return resolved
     matches = sorted(project_dir.rglob(path.name))
     return matches[0] if matches else None
 
@@ -227,7 +223,7 @@ def _required_qsc_logo(project_dir: Path) -> Path:
     searched = "\n".join(f"- {path}" for path in _qsc_logo_candidates(project_dir))
     raise FileNotFoundError(
         "Missing required QSC logo. Add the official logo as "
-        "`HighlightSlides/assets/qsc-logo-white.png` or set HIGHLIGHT_QSC_LOGO.\n"
+        "`HighlightSlides/assets/qsc-logo.png` or set HIGHLIGHT_QSC_LOGO.\n"
         f"Searched:\n{searched}"
     )
 
@@ -239,21 +235,21 @@ def _qsc_logo_candidates(project_dir: Path) -> list[Path]:
         candidates.append(Path(env_path))
     candidates.extend(
         [
-            project_dir / "logos" / "qsc-logo-white.png",
             project_dir / "logos" / "qsc-logo.png",
+            project_dir / "logos" / "qsc-logo-white.png",
             project_dir / "logos" / "qsc-logo.jpg",
-            Path.cwd() / "assets" / "qsc-logo-white.png",
             Path.cwd() / "assets" / "qsc-logo.png",
+            Path.cwd() / "assets" / "qsc-logo-white.png",
             Path.cwd() / "assets" / "qsc-logo.jpg",
-            Path.cwd().parent / "assets" / "qsc-logo-white.png",
             Path.cwd().parent / "assets" / "qsc-logo.png",
+            Path.cwd().parent / "assets" / "qsc-logo-white.png",
             Path.cwd().parent / "assets" / "qsc-logo.jpg",
-            Path("/work/highlight-slides/assets/qsc-logo-white.png"),
             Path("/work/highlight-slides/assets/qsc-logo.png"),
-            Path(__file__).resolve().parents[3] / "assets" / "qsc-logo-white.png",
+            Path("/work/highlight-slides/assets/qsc-logo-white.png"),
             Path(__file__).resolve().parents[3] / "assets" / "qsc-logo.png",
-            Path(__file__).resolve().parents[4] / "assets" / "qsc-logo-white.png",
+            Path(__file__).resolve().parents[3] / "assets" / "qsc-logo-white.png",
             Path(__file__).resolve().parents[4] / "assets" / "qsc-logo.png",
+            Path(__file__).resolve().parents[4] / "assets" / "qsc-logo-white.png",
         ]
     )
     return candidates
@@ -457,8 +453,8 @@ def build_highlight_deck(
     logo_box = slide1.shapes[6]
     qsc_logo = _required_qsc_logo(project_dir)
     partner_logos = _logo_paths(project_dir, fields["Institution Logos"])
+    left, top, width, height = logo_box.left, logo_box.top, logo_box.width, logo_box.height
     _delete_shape(logo_box)
-    left, top, width, height = SLIDE1_LOGOS
     _add_qsc_and_partner_logos(slide1, qsc_logo, partner_logos, left, top, width, height)
 
     slide2 = prs.slides[1]

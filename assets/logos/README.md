@@ -9,8 +9,9 @@ Policy for generated highlight slides:
 - Per-paper logos should be used only for institution(s) that the paper supports
   as QSC-funded or QSC-supported.
 - Do not include every author affiliation.
-- Prefer white/knockout logo variants because the template places logos on the
-  blue footer band.
+- Prefer full-color logo variants because the template places logos in a white
+  band immediately above the blue footer. Keep white/knockout variants only as
+  fallbacks for dark-background templates.
 - Prefer official institution brand/media pages or official websites.
 - Keep original aspect ratio. The deck generator sizes logos automatically.
 

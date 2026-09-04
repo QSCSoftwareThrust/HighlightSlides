@@ -46,15 +46,16 @@ Rules:
   only when the paper supports that institution as QSC-funded or
   QSC-supported. Do not use `possible_qsc_partners_not_yet_downloaded` entries
   unless you first download a suitable official logo file.
-- Prefer white/knockout logo variants because the template places logos on the
-  blue bottom band.
+- Prefer full-color logo variants because the template places logos in a white
+  band immediately above the blue footer. Use white/knockout variants only when
+  a dark-background template explicitly calls for them.
 - In `Institution Logos`, list one bullet per logo using this format:
   `- <Institution name>: logos/<filename>.png`
 - If a logo cannot be found or downloaded reliably, write
   `- <Institution name>: Unknown`.
 - The PowerPoint generator will always include the QSC logo when
   `assets/qsc-logo.png` is available, and will preserve each logo's aspect
-  ratio in the bottom slide-1 logo band.
+  ratio in the above-footer slide-1 logo band.
 - Slide 2 will follow the guidance in `FY26_Highlight_Template.pptx` slide 8:
   `NQISRC Intellectual Role` and `NQISRC Funding Role` must be selected only
   from the supported paper evidence, and `Funding Institution Contributions`

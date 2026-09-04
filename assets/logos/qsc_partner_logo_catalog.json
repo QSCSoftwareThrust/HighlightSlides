@@ -10,7 +10,7 @@
     "expected_path": "../qsc-logo.png",
     "policy": "Inserted automatically by the deck generator; do not list QSC in per-paper Institution Logos."
   },
-  "logo_policy": "Use QSC automatically plus logos only for institution(s) the paper supports as QSC-funded or QSC-supported. Prefer white or knockout logos because the template places logos on the blue bottom band. Do not include every author affiliation.",
+  "logo_policy": "Use QSC automatically plus logos only for institution(s) the paper supports as QSC-funded or QSC-supported. Prefer full-color logos because the template places logos in a white band immediately above the blue footer. Do not include every author affiliation.",
   "related_non_qsc_or_historical": [
     {
       "name": "Fermi National Accelerator Laboratory",
@@ -68,9 +68,9 @@
       "type": "national_lab",
       "expected_path": "ornl.png",
       "official_site": "https://www.ornl.gov/",
-      "notes": "QSC headquarters and lead institution. Current file is a green official ORNL logo; replace with a white version if contrast is poor on the blue footer.",
+      "notes": "QSC headquarters and lead institution. The current green official ORNL logo is preferred in the white above-footer logo band; retain the white version only for dark-background templates.",
       "readiness": "ready",
-      "background_fit": "blue_footer_ok"
+      "background_fit": "white_logo_band_preferred"
     },
     {
       "name": "Los Alamos National Laboratory",
@@ -79,7 +79,7 @@
       "expected_path": "lanl.png",
       "official_site": "https://www.lanl.gov/",
       "readiness": "ready",
-      "background_fit": "blue_footer_ok"
+      "background_fit": "white_logo_band_preferred"
     },
     {
       "name": "Pacific Northwest National Laboratory",
@@ -88,8 +88,8 @@
       "expected_path": "pnnl.jpg",
       "official_site": "https://www.pnnl.gov/",
       "readiness": "ready",
-      "background_fit": "blue_footer_review",
-      "notes": "Fallback JPEG logo; replace with an official transparent or white version if available."
+      "background_fit": "white_logo_band_ok",
+      "notes": "Fallback JPEG logo; replace with an official transparent full-color version if available."
     },
     {
       "name": "Sandia National Laboratories",
@@ -97,9 +97,9 @@
       "type": "national_lab",
       "expected_path": "sandia.png",
       "official_site": "https://www.sandia.gov/",
-      "notes": "White official Sandia logo works on the template blue footer. Not listed as a current QSC renewal partner in the ORNL 2026-updated partner list; include only when a paper supports Sandia as QSC-funded or QSC-supported.",
+      "notes": "A full-color Sandia logo is needed for the white above-footer band. The current white version is retained only for dark-background templates. Include Sandia only when a paper supports it as QSC-funded or QSC-supported.",
       "readiness": "ready_when_supported_by_paper",
-      "background_fit": "blue_footer_preferred"
+      "background_fit": "requires_full_color_for_white_logo_band"
     }
   ],
   "possible_qsc_partners_not_yet_downloaded": [
