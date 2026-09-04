@@ -1,6 +1,7 @@
 .venv/
 .npm-global/
 work/
+graphify-out/
 *.egg-info/
 __pycache__/
 *.pyc

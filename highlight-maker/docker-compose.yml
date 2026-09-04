@@ -10,7 +10,7 @@ services:
     environment:
       OLLAMA_HOST: http://ollama:11434
       HIGHLIGHT_TEMPLATE: /work/highlight-slides/FY26_Highlight_Template.pptx
-      HIGHLIGHT_QSC_LOGO: /work/highlight-slides/assets/qsc-logo-white.png
+      HIGHLIGHT_QSC_LOGO: /work/highlight-slides/assets/qsc-logo.png
     volumes:
       - ..:/work/highlight-slides
       - ./work:/work/projects

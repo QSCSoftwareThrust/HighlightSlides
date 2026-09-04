@@ -48,6 +48,19 @@ The paper source may be:
 - an arXiv URL, such as `https://arxiv.org/abs/2601.03185`
 - a local PDF path
 
+## Autonomous Defaults
+
+Treat the paper source as the only required user input. Do not ask the user to
+name a project, choose a folder, select a template, confirm routine actions, or
+provide missing paper fields. The `highlight <PAPER_SOURCE>` command creates or
+reuses the complete project tree automatically.
+
+When the paper does not support a required field, write `Unknown`. Use the
+available logo library only; do not pause to search for, download, or request
+additional logos. If an appropriate local logo is unavailable, write `Unknown`
+for that institution. Proceed directly from preparation through deck creation
+without asking for approval.
+
 ## Required Output
 
 Create these files in the generated project folder:
@@ -92,8 +105,10 @@ For example:
 ```
 
 4. Change into the generated project folder.
-5. Read `prompt.md`.
-6. Read every file that `prompt.md` points to, especially:
+5. Read `prompt.md`, then use the paper Markdown and figure index it names.
+   Prefer image-only crops and embedded figures; do not inspect or request
+   full-page renders unless the image-only candidates are insufficient.
+6. Read the evidence needed to complete the required fields, especially:
 
 ```text
 extracted/paper.md
@@ -102,16 +117,16 @@ extracted/figures/FIGURE_CANDIDATES.md
 
 7. Write `paper_key_information.md` in the project root using exactly the
 structure requested by `prompt.md`.
-8. Run the deck generation command with the generated project name:
+8. Run the deck generation command from that project folder:
 
 ```bash
-highlight deck --project arxiv-<ARXIV_ID_WITH_DASHES>
+highlight deck
 ```
 
 For example:
 
 ```bash
-highlight deck --project arxiv-2601-03185
+highlight deck
 ```
 
 ## Content Rules
@@ -130,11 +145,11 @@ highlight deck --project arxiv-2601-03185
 - Use 2-4 concise bullets for `Research Details`.
 - Recommend one figure candidate when possible.
 - The QSC logo is handled automatically by the deck generator. For
-  `Institution Logos`, only find/download official PNG/JPG logos for the
-  institution or institutions that the paper supports as QSC-funded or
-  QSC-supported. Check `assets/logos/` and
-  `assets/logos/qsc_partner_logo_catalog.json` before searching the web. Do not
-  list every author affiliation.
+  `Institution Logos`, use only official PNG/JPG files already in
+  `assets/logos/` or the project `logos/` directory when paper evidence supports
+  that institution. Do not search the web, download assets, or ask the user for
+  logos; use `Unknown` when no suitable local asset exists. Do not list every
+  author affiliation.
 - Do not write speaker notes.
 - Do not modify the PowerPoint template in place. Write a new output deck.
 

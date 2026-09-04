@@ -36,22 +36,22 @@ Rules:
   QSC/NQISRC-funded work. Do not include every author affiliation. Do not
   include general facilities or unrelated funders unless the paper links them to
   the QSC-supported contribution.
-- If web access is available, download official PNG or JPG logo files into the
-  project `logos/` directory. Use official institutional pages, press kits, or
-  brand pages when possible. Do not use low-resolution screenshots or images
-  with unrelated text. Do not use SVG files unless you convert them to PNG/JPG.
-- Before searching the web, check the reusable logo library at
+- Do not ask the user for logos or search the web during the normal workflow.
+  Use only official PNG/JPG assets already available in the reusable library or
+  project `logos/` directory. If an appropriate local logo is unavailable,
+  write `- <Institution name>: Unknown`.
+- Before selecting logos, check the reusable library at
   `assets/logos/qsc_partner_logo_catalog.json` and `assets/logos/` when those
   paths are available from the current workspace. Use files from `ready_logos`
   only when the paper supports that institution as QSC-funded or
   QSC-supported. Do not use `possible_qsc_partners_not_yet_downloaded` entries
-  unless you first download a suitable official logo file.
+  until a suitable official logo has been added locally.
 - Prefer full-color logo variants because the template places logos in a white
   band immediately above the blue footer. Use white/knockout variants only when
   a dark-background template explicitly calls for them.
 - In `Institution Logos`, list one bullet per logo using this format:
   `- <Institution name>: logos/<filename>.png`
-- If a logo cannot be found or downloaded reliably, write
+- If an appropriate logo is not available locally, write
   `- <Institution name>: Unknown`.
 - The PowerPoint generator will always include the QSC logo when
   `assets/qsc-logo.png` is available, and will preserve each logo's aspect

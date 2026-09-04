@@ -3,6 +3,8 @@ from __future__ import annotations
 import os
 import shutil
 import sys
+import time
+from hashlib import sha256
 from pathlib import Path
 from typing import Optional
 
@@ -94,7 +96,7 @@ def extract_project(base: Path) -> Path:
     return output_md
 
 
-def extract_project_figures(base: Path) -> Path:
+def extract_project_figures(base: Path, *, include_page_renders: bool = False) -> Path:
     from .extract import (
         extract_caption_figure_crops,
         extract_image_block_crops,
@@ -108,7 +110,15 @@ def extract_project_figures(base: Path) -> Path:
     crops = extract_caption_figure_crops(pdf, figure_dir / "crops")
     crops.extend(extract_image_block_crops(pdf, figure_dir / "crops"))
     embedded = extract_with_pdfimages(pdf, figure_dir / "embedded")
-    rendered = render_pages_with_pymupdf(pdf, figure_dir / "pages")
+    # Rendering every PDF page is expensive and usually redundant: extracted
+    # image blocks and caption-associated crops are better choices for a
+    # highlight slide. Keep page renders as an automatic fallback when no
+    # usable image candidates were found, or expose them on request.
+    rendered = []
+    if include_page_renders or not (crops or embedded):
+        rendered = render_pages_with_pymupdf(pdf, figure_dir / "pages")
+    else:
+        console.print("Skipped full-page figure renders; use --full-page-renders to include them.")
     index = write_figure_index(figure_dir, crops, embedded, rendered)
     console.print(f"Wrote {index}")
     return index
@@ -145,7 +155,43 @@ def default_project_name(source: str) -> str:
     return f"arxiv-{parse_arxiv_source(source).identifier.replace('.', '-')}"
 
 
-def prepare_project(source: str, project: Optional[str], root: Path, insecure_tls: bool) -> None:
+def _files_match(first: Path, second: Path) -> bool:
+    if not first.exists() or not second.exists() or first.stat().st_size != second.stat().st_size:
+        return False
+    first_hash = sha256()
+    second_hash = sha256()
+    with first.open("rb") as first_file, second.open("rb") as second_file:
+        for first_chunk, second_chunk in zip(
+            iter(lambda: first_file.read(1024 * 1024), b""),
+            iter(lambda: second_file.read(1024 * 1024), b""),
+        ):
+            first_hash.update(first_chunk)
+            second_hash.update(second_chunk)
+    return first_hash.digest() == second_hash.digest()
+
+
+def _source_is_current(source: str, base: Path) -> bool:
+    pdf = base / "source" / "paper.pdf"
+    source_path = Path(source).expanduser()
+    if source_path.exists():
+        return _files_match(source_path, pdf)
+
+    source_info = base / "source" / "arxiv_source.txt"
+    if not pdf.exists() or not source_info.exists():
+        return False
+    identifier = parse_arxiv_source(source).identifier
+    return f"id: {identifier}" in source_info.read_text(encoding="utf-8", errors="replace")
+
+
+def prepare_project(
+    source: str,
+    project: Optional[str],
+    root: Path,
+    insecure_tls: bool,
+    *,
+    force: bool = False,
+    include_page_renders: bool = False,
+) -> None:
     source_path = Path(source).expanduser()
     project_name = project or default_project_name(source)
 
@@ -153,18 +199,32 @@ def prepare_project(source: str, project: Optional[str], root: Path, insecure_tl
     create_project(base)
     console.print(f"Prepared project directory: {base}")
 
-    if source_path.exists():
+    source_is_current = not force and _source_is_current(source, base)
+    if source_is_current:
+        console.print("Reusing the existing paper source and prepared files.")
+    elif source_path.exists():
         import_pdf_to_project(source_path, base)
     else:
         fetch_arxiv_to_project(source, base, insecure_tls=insecure_tls)
 
-    extract_project(base)
-    extract_project_figures(base)
+    paper_md = base / "extracted" / "paper.md"
+    figure_index = base / "extracted" / "figures" / "FIGURE_CANDIDATES.md"
+    needs_page_renders = include_page_renders and not any((base / "extracted" / "figures" / "pages").glob("page-*.png"))
+
+    if force or not source_is_current or not paper_md.exists():
+        extract_project(base)
+    else:
+        console.print(f"Reusing {paper_md}")
+
+    if force or not source_is_current or not figure_index.exists() or needs_page_renders:
+        extract_project_figures(base, include_page_renders=include_page_renders)
+    else:
+        console.print(f"Reusing {figure_index}")
+
     prompt_path = write_project_prompt(base)
     console.print("")
-    console.print(f"Next: cd {base}")
-    console.print("Then run: codex  # or claude")
-    console.print(f"Ask the LLM to read {prompt_path.name} and write paper_key_information.md.")
+    console.print(f"Project is ready: {base}")
+    console.print(f"The automation instructions are in {prompt_path}.")
 
 
 @app.command()
@@ -221,10 +281,15 @@ def extract(
 def figures(
     project: str = typer.Option(..., help="Per-paper project name."),
     root: Path = typer.Option(DEFAULT_ROOT, help="Root directory for per-paper projects."),
+    full_page_renders: bool = typer.Option(
+        False,
+        "--full-page-renders",
+        help="Also render every PDF page. This is slower and is normally unnecessary.",
+    ),
 ) -> None:
-    """Extract embedded images and render page candidates."""
+    """Extract image candidates; render all pages only when requested."""
     base = project_dir(project, root)
-    extract_project_figures(base)
+    extract_project_figures(base, include_page_renders=full_page_renders)
 
 
 @app.command()
@@ -247,9 +312,22 @@ def prepare(
         "--insecure-tls",
         help="Disable TLS certificate verification for managed networks with TLS inspection.",
     ),
+    force: bool = typer.Option(False, "--force", help="Refresh the paper text and figure candidates."),
+    full_page_renders: bool = typer.Option(
+        False,
+        "--full-page-renders",
+        help="Also render every PDF page. This is slower and is normally unnecessary.",
+    ),
 ) -> None:
-    """Run fetch/import, Markdown extraction, figure extraction, and prompt generation."""
-    prepare_project(source, project, root, insecure_tls)
+    """Create/reuse the project folder, then prepare paper and figure inputs."""
+    prepare_project(
+        source,
+        project,
+        root,
+        insecure_tls,
+        force=force,
+        include_page_renders=full_page_renders,
+    )
 
 
 @app.command("local")
@@ -264,12 +342,25 @@ def local(
     ),
     model: str = typer.Option(DEFAULT_MODEL, help="Ollama model name."),
     ollama_url: str = typer.Option(DEFAULT_OLLAMA_URL, help="Ollama API base URL."),
+    force: bool = typer.Option(False, "--force", help="Refresh the paper text and figure candidates."),
+    full_page_renders: bool = typer.Option(
+        False,
+        "--full-page-renders",
+        help="Also render every PDF page. This is slower and is normally unnecessary.",
+    ),
 ) -> None:
     """Prepare the paper and generate paper_key_information.md with local Ollama."""
     from .local_llm import generate_key_information
     from .pptx_export import build_highlight_deck
 
-    prepare_project(source, project, root, insecure_tls)
+    prepare_project(
+        source,
+        project,
+        root,
+        insecure_tls,
+        force=force,
+        include_page_renders=full_page_renders,
+    )
     project_name = project or default_project_name(source)
     base = project_dir(project_name, root)
     key_output = generate_key_information(base, ollama_url=ollama_url, model=model)
@@ -281,7 +372,10 @@ def local(
 
 @app.command()
 def deck(
-    project: str = typer.Option(..., help="Per-paper project name."),
+    project: Optional[str] = typer.Option(
+        None,
+        help="Per-paper project name. Omit when running inside a prepared project folder.",
+    ),
     root: Path = typer.Option(DEFAULT_ROOT, help="Root directory for per-paper projects."),
     template: Optional[Path] = typer.Option(
         None,
@@ -292,10 +386,16 @@ def deck(
     """Create the two-slide highlight deck from paper_key_information.md."""
     from .pptx_export import build_highlight_deck
 
-    base = project_dir(project, root)
+    base = project_dir(project, root) if project else Path.cwd()
+    if not (base / "paper_key_information.md").exists():
+        raise typer.BadParameter(
+            "No paper_key_information.md found. Run `highlight <PAPER_SOURCE>` first, "
+            "or use --project from the configured work directory."
+        )
     template_path = template or default_template_path()
+    start = time.perf_counter()
     output_path = build_highlight_deck(base, template_path=template_path, output_path=output)
-    console.print(f"Wrote highlight deck: {output_path}")
+    console.print(f"Wrote highlight deck in {time.perf_counter() - start:.2f}s: {output_path}")
 
 
 def entrypoint() -> None:

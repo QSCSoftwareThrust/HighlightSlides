@@ -83,14 +83,15 @@ codex
 Ask:
 
 ```text
-Read prompt.md, write paper_key_information.md, then run highlight deck --project arxiv-2601-03185
+Read prompt.md, create the highlight deck autonomously, and do not ask me routine setup questions.
 ```
 
 ### Host System Dependencies
 
 Python dependencies are installed into `.venv`. `pdfimages` from Poppler is
-optional: if it is unavailable, embedded figure extraction is skipped and PyMuPDF
-still renders full-page figure candidates.
+optional: if it is unavailable, embedded figure extraction is skipped. The
+default workflow still extracts image-block and caption crops; full-page renders
+are opt-in through `--full-page-renders`.
 
 Install Poppler only if you want embedded image extraction:
 
@@ -200,7 +201,7 @@ If it prints a long authentication URL, open that URL in your normal browser.
 Ask the LLM:
 
 ```text
-Read prompt.md, write paper_key_information.md, then run highlight deck --project arxiv-2401-01234.
+Read prompt.md, create the highlight deck autonomously, and do not ask me routine setup questions.
 ```
 
 The generated `prompt.md` is placed in the project root so it is in the same

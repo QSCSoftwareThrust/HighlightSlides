@@ -150,7 +150,7 @@ codex
 and ask:
 
 ```text
-Read prompt.md, write paper_key_information.md, then run highlight deck --project arxiv-2601-03185
+Read prompt.md, create the highlight deck autonomously, and do not ask me routine setup questions.
 ```
 
 ## Local PDFs
@@ -180,4 +180,3 @@ http://localhost:8080
 ```
 
 See `highlight-maker/README.md` for container and local-model details.
-

@@ -60,5 +60,7 @@ work/arxiv-2601-03185/paper_key_information.md
 work/arxiv-2601-03185/output/highlight_slides.pptx
 ```
 
-`pdfimages` from Poppler is optional. Without it, the tool skips embedded image
-extraction and still renders full-page candidates with PyMuPDF.
+`pdfimages` from Poppler is optional. Without it, the tool still extracts
+caption/image-block crops. Full-page PDF renders are skipped by default because
+they are slower and usually less useful than image-only candidates; request
+them only with `--full-page-renders`.
